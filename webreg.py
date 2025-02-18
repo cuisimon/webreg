@@ -24,13 +24,14 @@ else:
 
 service = Service(executable_path=webdriver_path)
 options = webdriver.ChromeOptions()
+options.add_experimental_option("detach", True)
 driver = webdriver.Chrome(service=service, options=options)
 
 # Open login page
 driver.get(login_url)
 
 # need manual login here then reload target page
-time.sleep(10)
+time.sleep(20)
 
 # open wish list page
 driver.get(url)
@@ -38,6 +39,7 @@ driver.get(url)
 # Define the button's identifier (e.g., CSS selector, XPath, etc.)
 button_selector = "button.btn.btn-strong"  # Modify this selector as per your button
 delay = 5 # seconds
+button_clicked = False
 
 # Loop to continuously search and click the button if found
 try:
@@ -57,8 +59,10 @@ try:
                 # If the button is found, click it
                 button.click()
                 print("Button clicked! " + time_string)
+                button_clicked = True
                 # wait seconds to select participation
                 time.sleep(10)
+                break
             else:
                 print("Button disabled. retrying.." + time_string)
 
@@ -70,4 +74,5 @@ try:
 except KeyboardInterrupt:
     print("Process interrupted by user.")
 finally:
-    driver.quit()
+    if not button_clicked:
+        driver.quit()
