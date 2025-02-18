@@ -17,7 +17,7 @@ login_url = "https://anc.ca.apm.activecommunities.com/burnaby/signin"
 url = "https://anc.ca.apm.activecommunities.com/burnaby/wishlist"  # Replace with the actual URL
 
 # Path to your WebDriver (e.g., chromedriver for Chrome)
-if platform.system() == "Windows":
+if platform.system() != "Windows":
     webdriver_path = "./chromedriver"  # Replace with the path to your chromedriver
 else:
     webdriver_path = r".\chromedriver.exe"
