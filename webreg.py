@@ -70,7 +70,8 @@ try:
             print("Button not found, retrying..." + time_string)
 
         # Wait for a while before searching again
-        time.sleep(0.5)  # Adjust this sleep time if needed for efficiency
+        if args.refresh:
+            time.sleep(0.5)  # Adjust this sleep time if needed for efficiency
 except KeyboardInterrupt:
     print("Process interrupted by user.")
 finally:
