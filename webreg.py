@@ -9,12 +9,17 @@ import argparse
 import time
 
 parser = argparse.ArgumentParser(description="webreg params")
+parser.add_argument("--username", help="login username")
+parser.add_argument("--password", help="login password")
+parser.add_argument("--name", help="name to register")
+parser.add_argument("--number", help="the active details page number")
 parser.add_argument("--refresh", action="store_true", help="refresh page continuously", default=False)
+parser.add_argument("--dryrun", action="store_true", help="dryrun", default=False)
 args = parser.parse_args()
 
 # URL of the webpage you want to interact with
 login_url = "https://anc.ca.apm.activecommunities.com/burnaby/signin"
-url = "https://anc.ca.apm.activecommunities.com/burnaby/wishlist"  # Replace with the actual URL
+url = "https://anc.ca.apm.activecommunities.com/burnaby/activity/search/detail/{}".format(args.number)
 
 # Path to your WebDriver (e.g., chromedriver for Chrome)
 if platform.system() != "Windows":
@@ -25,13 +30,27 @@ else:
 service = Service(executable_path=webdriver_path)
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
+
 driver = webdriver.Chrome(service=service, options=options)
 
 # Open login page
 driver.get(login_url)
 
 # need manual login here then reload target page
+time.sleep(2)
+
+# login
+# find username/email field and send the username itself to the input field
+driver.find_element(By.XPATH, '//input[@type="text"]').send_keys(args.username)
+# find password input field and insert password as well
+driver.find_element(By.XPATH, '//input[@type="password"]').send_keys(args.password)
+
+# need manual click to bypass reCaptcha
 time.sleep(20)
+
+# click login button
+driver.find_element(By.XPATH, '//button[@type="submit"]').click()
+time.sleep(2)
 
 # open wish list page
 driver.get(url)
@@ -61,7 +80,26 @@ try:
                 print("Button clicked! " + time_string)
                 button_clicked = True
                 # wait seconds to select participation
-                time.sleep(10)
+                time.sleep(2)
+                # registration
+                try:
+                    driver.find_element(By.CSS_SELECTOR, "div.dropdown__button.input__field").click()  # You can use By.XPATH as well
+                    time.sleep(1)
+                    driver.find_element(By.XPATH, '//li[@title="{}"]'.format(args.name)).click()
+                    time.sleep(1)
+                    btn = driver.find_element(By.CSS_SELECTOR, "button.btn.btn-strong.fee-summary__add-to-cart-button")
+                    btn.click()
+                    time.sleep(2)
+                    btn = driver.find_element(By.CSS_SELECTOR, "button.btn.btn-strong.checkout__button")
+                    time.sleep(2)
+                    if not args.dryrun:
+                        btn.click()
+                        time.sleep(2)
+                    else:
+                        print("registration skipped for {} due to dryrun is True.".format(args.name))
+                    print("registration complete successfully for {}.".format(args.name))
+                except Exception:
+                    print("registration failed for {}.".format(args.name))
                 break
             else:
                 print("Button disabled. retrying.." + time_string)
