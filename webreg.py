@@ -7,15 +7,19 @@ from selenium.webdriver.support import expected_conditions as EC
 import platform
 import argparse
 import time
+import getpass
 
 parser = argparse.ArgumentParser(description="webreg params")
 parser.add_argument("--username", help="login username")
-parser.add_argument("--password", help="login password")
+parser.add_argument("--password", default="", help="login password")
 parser.add_argument("--name", help="name to register")
 parser.add_argument("--number", help="the active details page number")
 parser.add_argument("--refresh", action="store_true", help="refresh page continuously", default=False)
 parser.add_argument("--dryrun", action="store_true", help="dryrun", default=False)
 args = parser.parse_args()
+
+if not args.password:
+    args.password = getpass.getpass('Password:')
 
 # URL of the webpage you want to interact with
 login_url = "https://anc.ca.apm.activecommunities.com/burnaby/signin"
