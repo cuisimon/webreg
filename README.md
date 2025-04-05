@@ -3,7 +3,7 @@
 #   java 17
 #   python 3.12
 #   selenium driver 133.0
-
+# download chromedriver from https://googlechromelabs.github.io/chrome-for-testing/
 # Prepare pip dependencies
 
 The easiest way is to use following commands:
