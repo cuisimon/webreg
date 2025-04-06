@@ -15,3 +15,18 @@ python3 -m venv env
 source venv/bin/activate
 pip install selenium
 ```
+
+steps:
+
+1. find your target program number:
+    - login to webreg website
+    - find your desire program and go into the detail page.
+    - it's part of url on the program details page, eg url: https://anc.ca.apm.activecommunities.com/burnaby/activity/search/detail/58049
+    - number is 58049
+2. cd webreg
+3. python webreg.py 
+    --username <login email address> 
+    --name <Person's Name to register>, eg: "Simon Cui" 
+    --number <program number>, eg: 58049
+    --refresh (optional) only if want to wait for the avaiable spot 
+    --dryrun (optional) only for debugging
